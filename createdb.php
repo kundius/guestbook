@@ -11,6 +11,7 @@ mysql_select_db('gbook') or die(mysql_error());
 $sql = "
 	CREATE TABLE get (
 		id INT(11) NOT NULL AUTO_INCREMENT,
+		datetime timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		name VARCHAR(50) NOT NULL DEFAULT '',
 		email VARCHAR(50) NOT NULL DEFAULT '',
 		url VARCHAR(50) NULL DEFAULT 'url',
