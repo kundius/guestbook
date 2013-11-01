@@ -16,7 +16,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	$text = $_POST['text'];
 	$ip = $_SERVER['REMOTE_ADDR'];
 	$browser = $_SERVER['HTTP_USER_AGENT'];
-	//$dt = time();
+	
 	$sql = "INSERT INTO get(
 							name,
 							datetime,
@@ -27,7 +27,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 							browser)
 						VALUES(
 							'$user',
-							'now()',
+							now(),
 							'$email',
 							'$url',
 							'$text',
