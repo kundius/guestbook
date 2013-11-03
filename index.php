@@ -9,6 +9,7 @@ mysql_select_db(DB_NAME) or die(mysql_error());
 //echo $browser;
 
 
+
 if($_SERVER['REQUEST_METHOD']=='POST'){
 	$user = $_POST['user'];
 	$email = $_POST['email'];
@@ -55,7 +56,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 </head>
 <body>
 	<h1 class="h1">Guestbook</h1>
-	<form action="#" method="post">
+	<form action="index.php" method="post" enctype="multipart/from-data">
 		<table class="table-form" border="1">
 			<tr>
 				<td>User Name:</td>
@@ -71,18 +72,20 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			</tr>
 			<tr>
 				<td>CAPTCHA:</td>
-				<td></td>
+				<td><img src='captcha.php' id='capcha-image'></td>
 			</tr>
 			<tr>
-				<td></td>
-				<td><input type="text" size="58" name="captcha"></td>
+				<td><a href="javascript:void(0);" onclick="document.getElementById('capcha-image').src='captcha.php?rid=' + Math.random();">Обновить капчу</a></td>
+				<td><input type="text" size="58" name="code"></td>
+		
 			</tr>
 			<tr>
 				<td>Text:</td>
 				<td><textarea rows="10" cols="45" name="text" required>Писать сюда</textarea></td>
+			
 			</tr>
 			<tr>
-				<td><input type="submit" value="Отправить"></td>
+				<td><input type="submit" name="go" value="Отправить"></td>
 				<td><input type="reset" value="Очистить"></td>
 			</tr>
 		</table>
