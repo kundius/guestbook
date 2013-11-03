@@ -1,42 +1,38 @@
 <?php
-include 'db.inc.php';
-
-mysql_connect(DB_HOST, DB_LOGIN, DB_PASSWORD) or die("Ошибка!");
-mysql_select_db(DB_NAME) or die(mysql_error());
-
-//$ip = $_SERVER['REMOTE_ADDR'];
-//$browser = $_SERVER['HTTP_USER_AGENT'];
-//echo $browser;
-
-
-
-if($_SERVER['REQUEST_METHOD']=='POST'){
-	$user = $_POST['user'];
-	$email = $_POST['email'];
-	$url = $_POST['url'];
-	$text = $_POST['text'];
-	$ip = $_SERVER['REMOTE_ADDR'];
-	$browser = $_SERVER['HTTP_USER_AGENT'];
-	
-	$sql = "INSERT INTO get(
-							name,
-							datetime,
-							email,
-							url,
-							msg,
-							ip,
-							browser)
-						VALUES(
-							'$user',
-							now(),
-							'$email',
-							'$url',
-							'$text',
-							'$ip',
-							'$browser')";
-	mysql_query($sql) or die(mysql_error());
-	header('Location: index.php');
-	exit;
+include("random.php");
+$cap = $_COOKIE["captcha"];
+function check_code($code, $cookie) {
+    $code = trim($code);
+    $code = md5($code);
+    if ($code == $cap){return TRUE;}else{return FALSE;}
+}
+if (isset($_POST['go'])){
+	if ($_POST['code'] == '') {
+		$status = "Ошибка: введите капчу!";
+	}if (check_code($_POST['code'], $cookie)){
+		$status = "Ты правильно ввел капчу. Возьми с полки тортик, он твой.";
+		include 'db.inc.php';
+		mysql_connect(DB_HOST, DB_LOGIN, DB_PASSWORD) or die("Ошибка!");
+		mysql_select_db(DB_NAME) or die(mysql_error());
+		//$ip = $_SERVER['REMOTE_ADDR'];
+		//$browser = $_SERVER['HTTP_USER_AGENT'];
+		//echo $browser;
+		if($_SERVER['REQUEST_METHOD']=='POST'){
+			$user = $_POST['user'];
+			$email = $_POST['email'];
+			$url = $_POST['url'];
+			$text = $_POST['text'];
+			$ip = $_SERVER['REMOTE_ADDR'];
+			$browser = $_SERVER['HTTP_USER_AGENT'];
+			
+			$sql = "INSERT INTO get(name,datetime,email,url,msg,ip,browser) VALUES('$user',now(),'$email','$url','$text','$ip','$browser')";
+			mysql_query($sql) or die(mysql_error());
+			header('Location: index.php');
+			exit;
+		}
+	}else{
+		$status = "Ошибка: капча введена неверно!";
+	}
 }
 
 ?>
@@ -79,6 +75,13 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 				<td><input type="text" size="58" name="code"></td>
 		
 			</tr>
+			<?php if(isset($status)) {?>
+			<tr>
+				<td colspan="2">
+					<?php echo $status;?>
+				</td>
+			</tr>
+			<?php } ?>
 			<tr>
 				<td>Text:</td>
 				<td><textarea rows="10" cols="45" name="text" required>Писать сюда</textarea></td>
